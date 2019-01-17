@@ -409,7 +409,7 @@ describe('TransactionRunner', () => {
 
     describe('when printing the names', () => {
       beforeEach(() => {
-        sinon.spy(loggerStub, 'info');
+        sinon.spy(loggerStub, 'debug');
         configuration.options.names = true;
         runner = new Runner(configuration);
       });
@@ -1268,24 +1268,24 @@ describe('TransactionRunner', () => {
 
     describe('with hooks', () => {
       beforeEach(() => {
-        sinon.spy(loggerStub, 'info');
+        sinon.spy(loggerStub, 'debug');
         runner.hooks.beforeHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
             // eslint-disable-next-line
-            transaction => loggerStub.info('before')
+            transaction => loggerStub.debug('before')
           ],
         };
         runner.hooks.beforeValidationHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
             // eslint-disable-next-line
-            transaction => loggerStub.info('beforeValidation')
+            transaction => loggerStub.debug('beforeValidation')
           ],
         };
         runner.hooks.afterHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
             // eslint-disable-next-line
             function (transaction, done) {
-              loggerStub.info('after');
+              loggerStub.debug('after');
               done();
             },
           ],
@@ -1304,25 +1304,25 @@ describe('TransactionRunner', () => {
 
     describe('with hooks, but without hooks.transactions set', () => {
       beforeEach(() => {
-        sinon.spy(loggerStub, 'info');
+        sinon.spy(loggerStub, 'debug');
         runner.hooks.transactions = null;
         runner.hooks.beforeHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
             // eslint-disable-next-line
-            transaction => loggerStub.info('before')
+            transaction => loggerStub.debug('before')
           ],
         };
         runner.hooks.beforeValidationHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
             // eslint-disable-next-line
-            transaction => loggerStub.info('beforeValidation')
+            transaction => loggerStub.debug('beforeValidation')
           ],
         };
         runner.hooks.afterHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
             // eslint-disable-next-line
             function (transaction, done) {
-              loggerStub.info('after');
+              loggerStub.debug('after');
               done();
             },
           ],
@@ -1344,14 +1344,14 @@ describe('TransactionRunner', () => {
 
     describe('with multiple hooks for the same transaction', () => {
       beforeEach(() => {
-        sinon.spy(loggerStub, 'info');
+        sinon.spy(loggerStub, 'debug');
         runner.hooks.beforeHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
             // eslint-disable-next-line
-            transaction => loggerStub.info('first'),
+            transaction => loggerStub.debug('first'),
             // eslint-disable-next-line
             function (transaction, cb) {
-              loggerStub.info('second');
+              loggerStub.debug('second');
               cb();
             },
           ],

@@ -58,15 +58,13 @@ describe('CLI class Integration', () => {
         .stub(loggerStub, method)
         .callsFake((chunk) => { stderr += `\n${method}: ${chunk}`; });
     });
-    ['log', 'info', 'silly', 'verbose', 'debug'].forEach((method) => {
-      sinon
-        .stub(loggerStub, method)
-        .callsFake((chunk) => { stdout += `\n${method}: ${chunk}`; });
-    });
+    sinon
+      .stub(loggerStub, 'debug')
+      .callsFake((chunk) => { stdout += `\ndebug: ${chunk}`; });
   });
 
   after(() => {
-    ['warn', 'error', 'log', 'info', 'silly', 'verbose', 'debug'].forEach((method) => {
+    ['warn', 'error', 'debug'].forEach((method) => {
       loggerStub[method].restore();
     });
   });
@@ -74,7 +72,7 @@ describe('CLI class Integration', () => {
   describe('When using configuration file', () => {
     describe('When specifying custom configuration file by --config', () => {
       const configPath = '../../../custom-dredd-config-path.yaml';
-      const cmd = { argv: ['--config', configPath] };
+      const cmd = { argv: ['--config', configPath, '--loglevel=debug'] };
       const options = { _: ['api-description.apib', 'http://127.0.0.1'] };
 
       let fsExistsSync;
@@ -92,12 +90,12 @@ describe('CLI class Integration', () => {
 
       it('should call fs.existsSync with given path', () => assert.isTrue(fsExistsSync.calledWith(configPath)));
       it('should call configUtils.load with given path', () => assert.isTrue(configUtilsLoad.calledWith(configPath)));
-      it('should print message about using given configuration file', () => assert.include(stdout, `info: Configuration '${configPath}' found`));
+      it('should print message about using given configuration file', () => assert.include(stdout, `debug: Configuration '${configPath}' found`));
     });
 
     describe('When dredd.yml exists', () => {
       const configPath = './dredd.yml';
-      const cmd = { argv: [] };
+      const cmd = { argv: ['--loglevel=debug'] };
       const options = { _: ['api-description.apib', 'http://127.0.0.1'] };
 
       let fsExistsSync;
@@ -115,12 +113,12 @@ describe('CLI class Integration', () => {
 
       it('should call fs.existsSync with dredd.yml', () => assert.isTrue(fsExistsSync.calledWith(configPath)));
       it('should call configUtils.load with dredd.yml', () => assert.isTrue(configUtilsLoad.calledWith(configPath)));
-      it('should print message about using dredd.yml', () => assert.include(stdout, `info: Configuration '${configPath}' found`));
+      it('should print message about using dredd.yml', () => assert.include(stdout, `debug: Configuration '${configPath}' found`));
     });
 
     describe('When dredd.yml does not exist', () => {
       const configPath = './dredd.yml';
-      const cmd = { argv: [] };
+      const cmd = { argv: ['--loglevel=debug'] };
 
       let fsExistsSync;
       let configUtilsLoad;
@@ -137,7 +135,7 @@ describe('CLI class Integration', () => {
 
       it('should call fs.existsSync with dredd.yml', () => assert.isTrue(fsExistsSync.calledWith(configPath)));
       it('should never call configUtils.load', () => assert.isFalse(configUtilsLoad.called));
-      it('should not print message about using configuration file', () => assert.notInclude(stdout, 'info: Configuration'));
+      it('should not print message about using configuration file', () => assert.notInclude(stdout, 'debug: Configuration'));
     });
   });
 

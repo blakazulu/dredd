@@ -68,15 +68,13 @@ describe('CLI class', () => {
         .stub(loggerStub, method)
         .callsFake((chunk) => { stderr += `\n${method}: ${chunk}`; });
     });
-    ['log', 'info', 'silly', 'verbose', 'debug'].forEach((method) => {
-      sinon
-        .stub(loggerStub, method)
-        .callsFake((chunk) => { stdout += `\n${method}: ${chunk}`; });
-    });
+    sinon
+      .stub(loggerStub, 'debug')
+      .callsFake((chunk) => { stdout += `\ndebug: ${chunk}`; });
   });
 
   after(() => {
-    ['warn', 'error', 'log', 'info', 'silly', 'verbose', 'debug'].forEach((method) => {
+    ['warn', 'error', 'debug'].forEach((method) => {
       loggerStub[method].restore();
     });
   });
