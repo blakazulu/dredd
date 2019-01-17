@@ -130,7 +130,6 @@ describe('CLI - Reporters', () => {
       });
 
       it('hooks.log should print also to console', () => {
-        // Because --level=info is lower than --level=hook
         assert.include(cliInfo.output, 'using hooks.log to debug');
       });
       it('hooks.log should use toString on objects', () => assert.include(cliInfo.output, 'Error object!'));
